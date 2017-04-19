@@ -50,6 +50,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <math.h>
+#include <stdio.h>
 
 
 /*
@@ -289,7 +290,7 @@ StartPage(ppd_file_t         *ppd,	/* I - PPD file */
   width = (int) (header->cupsPageSize[0] * 254/72);
 
   /* Send label size, assume gap is same all the way round */
-  printf("{D%04d,%04d,%04d|}\n",labelpitch, width, length, width + labelgap); 
+  printf("{D%04d,%04d,%04d|}\n",labelpitch, width, length); 
 
   /*
    * Place the right command in the parameter AY temperature fine adjust
@@ -426,8 +427,6 @@ void
 EndPage(ppd_file_t *ppd,		/* I - PPD file */
         cups_page_header2_t *header)	/* I - Page header */
 {
-  int 		      Quant;	 		/* Quantity to print */
-  char		      *Temp;			/* Temporary string */
   unsigned int 	Tmedia;			/* type of media */
   char          *Tmode;			/* Print mode */
   unsigned int  Tmirror;		/* Mirror print */
@@ -442,11 +441,9 @@ EndPage(ppd_file_t *ppd,		/* I - PPD file */
   struct sigaction action;		/* Actions for POSIX signals */
 #endif /* HAVE_SIGACTION && !HAVE_SIGSET */
 
-  Temp = (char *) malloc(INTSIZE +2);
   Tmode = (char *) malloc(INTSIZE +2);
   Tspeed = (char *) malloc(INTSIZE +2);
   detect = 0;
-  Quant = 1;
   CutActive =0;
 
   /* Initialise printing defaults */
